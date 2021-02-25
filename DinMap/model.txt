@@ -1,0 +1,79 @@
+jQuery(document).ready(function($) {
+$('#MachineNameMap_maindiv').remove();
+$('#add_MachineNameMap').click(function () {
+$( '#add_MachineNameMap' ).removeClass("list-group-item add-layer").addClass("list-group-item add-layer disabled");
+    var MachineNameMap_main_div = document.createElement("li");
+        MachineNameMap_main_div.className = "list-group-item";
+        MachineNameMap_main_div.setAttribute("id", "MachineNameMap_maindiv");
+        MachineNameMap_main_div.innerHTML = ('<div class="nom-calque text-left">HumanReadable_Name</div><div class="btn btn-circle btn-xs loc-wkt" id="set_center_MachineNameMap"><span class="philicon philicon-Logo-header"></span></div><div id="stop-swipe-MachineNameMap" class="swipe-main disabled"><div class="swipe-wrapper swipe_off"><span class="swipe-btn"></span></div></div><div id="start-swipe-MachineNameMap" class="swipe-main"><div class="swipe-wrapper"><span class="swipe-btn"></span></div></div><div id="slider_MachineNameMap"><span class="ui-slider-handle"></span></div><div id="MachineNameMap_rm" class="glyphicon glyphicon-remove-circle rm-layer"></div><div id="set_visibility_MachineNameMap" class="layer-opacity on"></div>');
+function insertAfter(referenceNode, newNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+var div_before = document.getElementById("add_MachineNameMap");
+    document.getElementById("ol-dynamique-layer");
+    insertAfter(div_before, MachineNameMap_main_div);
+          map = $('.openlayers-map').data('openlayers');
+    var MachineNameMap = new OpenLayers.Layer.TMS(
+        "HumanReadable_Name",
+        "https://sous-paris.com/geoserver/gwc/service/tms/",
+        {
+            layername: "WokspaceLayerName",
+            type: "png",
+            alpha: true,
+            transitionEffect: 'resize',
+            isBaseLayer: false,
+            displayInLayerSwitcher: false,
+            // set if different than the bottom left of map.maxExtent
+            tileOrigin: new OpenLayers.LonLat(-20037508.34, -20037508.34)
+        });
+    map.openlayers.addLayers([MachineNameMap]);
+    MachineNameMap.setZIndex( 100 );
+              map.openlayers.panRatio     = 100;
+            map.openlayers.panDuration     = 100;
+            map.openlayers.zoomDuration = 100;
+        var position_MachineNameMap     = new OpenLayers.LonLat(SetMapCenter);
+        var zoom_MachineNameMap         = SetZoomLevel;
+$('#set_center_MachineNameMap').click(function () {
+                map.openlayers.setCenter(position_MachineNameMap, zoom_MachineNameMap);
+});
+$(function() {
+      $( "#slider_MachineNameMap" ).slider({
+      range: "min",
+      min: 0,
+      value: 100,
+      slide: function(e, ui) {
+          MachineNameMap.setOpacity(ui.value / 100);
+          $( "#amount" ).val( ui.value );
+          }
+      });
+      $("#amount" ).val($( "#slider_MachineNameMap" ).slider( "value" ) );
+  });
+// SWIPE
+    swipe = new OpenLayers.Control.Swipe(MachineNameMap);
+    map.openlayers.addControl(swipe);
+    $('#start-swipe-MachineNameMap').click(function () {
+$(this).addClass('disabled').siblings().removeClass('disabled');
+        swipe.deactivate();
+        swipe.activate();
+});
+    $('#stop-swipe-MachineNameMap').click(function () {
+$(this).addClass('disabled').siblings().removeClass('disabled');
+        swipe.deactivate();
+});
+$('#MachineNameMap_rm').click(function () {
+$('#MachineNameMap_maindiv').remove();
+map.openlayers.removeLayer(MachineNameMap);
+$( '#add_MachineNameMap' ).removeClass("list-group-item add-layer disabled").addClass("list-group-item add-layer");
+});
+    $('#set_visibility_MachineNameMap').click(function () {
+ if ($('#set_visibility_MachineNameMap').hasClass('on')){
+    MachineNameMap.setVisibility (false);
+    $('#set_visibility_MachineNameMap').removeClass("layer-opacity on").addClass("layer-opacity off");
+    }
+else {
+        MachineNameMap.setVisibility (true);
+    $('#set_visibility_MachineNameMap').removeClass("layer-opacity off").addClass("layer-opacity on");
+}
+});
+});
+$});
